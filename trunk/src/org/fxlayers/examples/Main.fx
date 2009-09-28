@@ -14,6 +14,6 @@ javafx.stage.Stage {
 
 def imageLayer = org.fxlayers.layers.Image{};
 
-insert imageLayer into map.layers;
+map.addLayer(imageLayer);
 
-imageLayer.toFront();
+imageLayer.test();
