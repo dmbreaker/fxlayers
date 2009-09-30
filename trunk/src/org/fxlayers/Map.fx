@@ -84,16 +84,17 @@ public class Map extends CustomNode  {
 	
 	override function create():Node {
 	    
+	    resolution = maxResolution;
+	    
 	    // TODO: will currently never get correct size (bind will stack overflow)
 	    var background = Rectangle {
-	    	width: parent.layoutBounds.width,
-            height: parent.layoutBounds.height,
+	    	width: bind layoutBounds.width,
+            height: bind layoutBounds.height-1,
             fill:Color.RED
-        } 
+        }
         
-        return Group { content: [background, layersContainer]}
+        return Group { content: [/*background,*/ layersContainer]}
     }
-    
     
 }
 

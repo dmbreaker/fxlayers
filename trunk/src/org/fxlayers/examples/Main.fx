@@ -12,7 +12,7 @@ javafx.stage.Stage {
     }
 }
 
-def imageLayer = org.fxlayers.layers.Image{};
+def imageLayer = org.fxlayers.layer.Image{};
 
 map.addLayer(imageLayer);
 
