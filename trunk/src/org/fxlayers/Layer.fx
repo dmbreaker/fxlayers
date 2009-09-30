@@ -11,7 +11,7 @@ public abstract class Layer extends CustomNode {
 	public var maxExtent: Bounds;
 	public var tileSize: Size;
 
-	public function moveTo(bounds: Bounds) {
+	public function moveTo(bounds: Bounds, dragging: Boolean, forceZoomChange: Boolean) {
 		var test = null;
 	}
 	

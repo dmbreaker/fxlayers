@@ -26,10 +26,10 @@ public class Image extends Layer {
 	override function create():Node {
 		//imageView.fitWidth = 800;
 	   
-        return  Group { content: [ imageView ] }
+        return Group { content: [ imageView ] }
     }
     
-    override public function moveTo(bounds: Bounds) {
+    override public function moveTo(bounds: Bounds, dragging: Boolean, forceZoomChange: Boolean) {
     	var ulPx = map.getLayerPxFromLonLat(LonLat {lon: extent.left, lat: extent.top });
     	
     	imageView.fitWidth = map.getSize().w;
@@ -44,6 +44,7 @@ public class Image extends Layer {
     }
 	
 	public function test() {
+	    // TODO: map is same size as layers :(
     	imageView.fitWidth = map.getSize().w;
     	imageView.fitHeight = map.getSize().h;
     	imageView.visible = true;
