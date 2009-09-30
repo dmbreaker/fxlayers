@@ -43,6 +43,18 @@ public class Map extends CustomNode  {
 	    return baseLayer.getExtent();
 	}
 	
+	public function moveTo(lonlat: LonLat, zoom : Integer, dragging: Boolean, forceZoomChange: Boolean) {
+		
+		var zoomChanged = forceZoomChange;
+		var bounds = getExtent();
+		    
+		baseLayer.moveTo(bounds, dragging, zoomChanged);
+	}
+
+	public function setCenter(lonlat: LonLat, zoom : Integer, dragging: Boolean, forceZoomChange: Boolean) {
+		moveTo(lonlat, zoom, dragging, forceZoomChange);
+	}
+	
 	public function calculateBounds(): Bounds {
         var size = this.getSize();
         var w_deg = size.w * resolution;
@@ -92,6 +104,8 @@ public class Map extends CustomNode  {
             height: bind layoutBounds.height-1,
             fill:Color.RED
         }
+        
+        // TODO: the map should be bound to its container size ..
         
         return Group { content: [/*background,*/ layersContainer]}
     }
