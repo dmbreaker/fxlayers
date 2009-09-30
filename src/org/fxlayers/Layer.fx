@@ -9,6 +9,7 @@ public abstract class Layer extends CustomNode {
 	protected var map: Map;
 
 	public var maxExtent: Bounds;
+	public var tileSize: Size;
 
 	public function moveTo(bounds: Bounds) {
 		var test = null;
