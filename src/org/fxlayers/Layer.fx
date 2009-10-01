@@ -1,10 +1,11 @@
 package org.fxlayers;
 
 import javafx.scene.*;
+import javafx.scene.layout.*;
 
 import javafx.scene.input.MouseEvent;
 
-public abstract class Layer extends CustomNode {
+public abstract class Layer extends Container {
 
 	protected var map: Map;
 
@@ -30,17 +31,13 @@ public abstract class Layer extends CustomNode {
 	}
 	
 	public function getLonLatFromViewPortPx(viewPortPx: Pixel): LonLat {
-        var lonlat = null;
+        var center = map.getCenter();
+        var res  = map.getResolution();
 
-        var size = map.getSize();
-        var center = map.center;
-
-        var res  = map.resolution;
-
-        var delta_x = viewPortPx.x - (size.w / 2);
-        var delta_y = viewPortPx.y - (size.h / 2);
+        var delta_x = viewPortPx.x - (map.width / 2);
+        var delta_y = viewPortPx.y - (map.height / 2);
                 
-        lonlat = LonLat {
+        var lonlat = LonLat {
         	lon: center.lon + delta_x * res,
         	lat: center.lat - delta_y * res
         }
