@@ -7,7 +7,10 @@ import javafx.scene.layout.*;
 
 import javafx.scene.input.MouseEvent;
 
-public class Map extends CustomNode  {
+public class Map extends Container  {
+    override var width = bind scene.width on replace { mapResize(); };
+    override var height = bind scene.height on replace { mapResize(); };
+    
 	public var center: LonLat = null;
 	public var maxResolution: Number = 1.40625;
 	public var resolution: Number;
@@ -15,20 +18,22 @@ public class Map extends CustomNode  {
 	public var projection: String = "EPSG:4326";
 	public var maxExtent: Bounds = Bounds { left: -180, bottom: -90, right:180, top:90 };
 	
-	public def size = Size { w: bind layoutBounds.width, h: bind layoutBounds.height};
+	var firstRender: Boolean = true;
+	var background: Rectangle = Rectangle {
+    	width: bind width
+        height: bind height
+        fill: Color.RED
+    };
 	
 	var baseLayer: Layer;
-	
 	var layersContainer =  Container { };
 	
 	public function addLayer(layer: Layer) {
+	    layer.setMap(this);
+	    
 	    insert layer into layersContainer.content;
 	    
 	    baseLayer = layer;
-	}
-	
-	public function getSize() : Size {
-		return size;
 	}
 	
 	public function getCenter() : LonLat {
@@ -36,7 +41,7 @@ public class Map extends CustomNode  {
 	}
 	
 	public function getResolution() : Number {
-		return baseLayer.getResolution()
+		return baseLayer.getResolution();
 	}
 	
 	public function getExtent() : Bounds {
@@ -44,27 +49,40 @@ public class Map extends CustomNode  {
 	}
 	
 	public function moveTo(lonlat: LonLat, zoom : Integer, dragging: Boolean, forceZoomChange: Boolean) {
-		
 		var zoomChanged = forceZoomChange;
+		
+		resolution = maxResolution;
+		
 		var bounds = getExtent();
+		
+		if (firstRender) {
+            insert background into content;
+        	insert layersContainer into content;
+        	firstRender = false;
+        }
 		    
-		baseLayer.moveTo(bounds, dragging, zoomChanged);
+		baseLayer.moveTo(bounds, dragging, zoomChanged);	
 	}
 
 	public function setCenter(lonlat: LonLat, zoom : Integer, dragging: Boolean, forceZoomChange: Boolean) {
+		center = lonlat;
 		moveTo(lonlat, zoom, dragging, forceZoomChange);
 	}
 	
 	public function calculateBounds(): Bounds {
-        var size = this.getSize();
-        var w_deg = size.w * resolution;
-        var h_deg = size.h * resolution;
+        var w_deg = width * resolution;
+        var h_deg = height * resolution;
 
         return Bounds {left: this.center.lon - w_deg / 2,
                        bottom: this.center.lat - h_deg / 2,
                        right: this.center.lon + w_deg / 2,
     	               top: this.center.lat + h_deg / 2};
     }
+	
+	public function mapResize() {
+	    baseLayer.width = width;
+	    baseLayer.height = height;
+	}
 	
 	public function getLonLatFromViewPortPx(viewPortPx: Pixel): LonLat {
         return baseLayer.getLonLatFromViewPortPx(viewPortPx);
@@ -94,22 +112,8 @@ public class Map extends CustomNode  {
        return getLayerPxFromViewPortPx(getPixelFromLonLat(lonlat));         
     }
 	
-	override function create():Node {
-	    
-	    resolution = maxResolution;
-	    
-	    // TODO: will currently never get correct size (bind will stack overflow)
-	    var background = Rectangle {
-	    	width: bind layoutBounds.width,
-            height: bind layoutBounds.height-1,
-            fill:Color.RED
-        }
+	override function doLayout() {
         
-        // TODO: the map should be bound to its container size ..
-        
-        return Group { content: [/*background,*/ layersContainer]}
     }
     
 }
-
-

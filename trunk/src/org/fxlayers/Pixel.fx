@@ -1,6 +1,6 @@
 package org.fxlayers;
 
 public class Pixel {
-    public var x: Integer;
-    public var y: Integer;
+    public var x: Number;
+    public var y: Number;
 }
