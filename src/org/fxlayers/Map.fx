@@ -4,6 +4,7 @@ import javafx.scene.*;
 import javafx.scene.paint.*;
 import javafx.scene.shape.*;
 import javafx.scene.layout.*;
+import javafx.scene.input.*;
 
 import javafx.scene.input.MouseEvent;
 
@@ -22,6 +23,12 @@ public class Map extends Container  {
 		right: 180
 		top: 90
 	}
+	public var px: Number;
+	public var py: Number;
+	override var onMouseMoved = function(e:MouseEvent) { 
+		px = e.x;
+		py = e.y;
+	}
 	
 	var firstRender: Boolean = true;
 	var size: Size = Size { 
@@ -35,6 +42,7 @@ public class Map extends Container  {
     }
 	var baseLayer: Layer;
 	var layersContainer = Container { }
+	var controlsContainer = Container { }
 	
 	public function addLayer(layer: Layer) {
 	    layer.setMap(this);
@@ -42,6 +50,12 @@ public class Map extends Container  {
 	    insert layer into layersContainer.content;
 	    
 	    baseLayer = layer;
+	}
+	
+	public function addControl(control: Control) {
+	    control.setMap(this);
+	    
+	    insert control into controlsContainer.content;
 	}
 	
 	public function getSize() {
@@ -72,8 +86,10 @@ public class Map extends Container  {
 		var bounds = getExtent();
 		
 		if (firstRender) {
-            insert background into content;
+            insert background into content;            
         	insert layersContainer into content;
+        	insert controlsContainer into content;
+        	
         	firstRender = false;
         }
 		    

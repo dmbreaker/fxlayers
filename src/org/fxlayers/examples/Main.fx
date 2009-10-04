@@ -3,6 +3,7 @@ package org.fxlayers.examples;
 import javafx.scene.*;
 
 import org.fxlayers.*;
+import org.fxlayers.control.*;
 
 var scene: Scene;
 
@@ -29,5 +30,6 @@ def imageLayer = org.fxlayers.layer.Image {
 }
 
 map.addLayer(imageLayer);
+map.addControl(MousePosition{});
 
 map.zoomToMaxExtent();
