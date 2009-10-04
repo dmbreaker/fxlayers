@@ -16,17 +16,25 @@ public class Map extends Container  {
 	public var resolution: Number;
 	public var zoom: Number = 0;
 	public var projection: String = "EPSG:4326";
-	public var maxExtent: Bounds = Bounds { left: -180, bottom: -90, right:180, top:90 };
+	public var maxExtent: Bounds = Bounds {
+		left: -180
+		bottom: -90
+		right: 180
+		top: 90
+	}
 	
 	var firstRender: Boolean = true;
+	var size: Size = Size { 
+		w: bind width
+		h: bind height
+	}
 	var background: Rectangle = Rectangle {
     	width: bind width
         height: bind height
         fill: Color.RED
-    };
-	
+    }
 	var baseLayer: Layer;
-	var layersContainer =  Container { };
+	var layersContainer = Container { }
 	
 	public function addLayer(layer: Layer) {
 	    layer.setMap(this);
@@ -36,16 +44,24 @@ public class Map extends Container  {
 	    baseLayer = layer;
 	}
 	
+	public function getSize() {
+	    return size
+	}
+	
+	public function getMaxExtent() { 
+        return maxExtent;
+    }
+	
 	public function getCenter() : LonLat {
-		return center;
+		return center
 	}
 	
 	public function getResolution() : Number {
-		return baseLayer.getResolution();
+		return baseLayer.getResolution()
 	}
 	
 	public function getExtent() : Bounds {
-	    return baseLayer.getExtent();
+	    return baseLayer.getExtent()
 	}
 	
 	public function moveTo(lonlat: LonLat, zoom : Integer, dragging: Boolean, forceZoomChange: Boolean) {
@@ -61,35 +77,55 @@ public class Map extends Container  {
         	firstRender = false;
         }
 		    
-		baseLayer.moveTo(bounds, dragging, zoomChanged);	
+		baseLayer.moveTo(bounds, dragging, zoomChanged)
 	}
 
 	public function setCenter(lonlat: LonLat, zoom : Integer, dragging: Boolean, forceZoomChange: Boolean) {
 		center = lonlat;
-		moveTo(lonlat, zoom, dragging, forceZoomChange);
+		moveTo(lonlat, zoom, dragging, forceZoomChange)
 	}
+	
+	public function zoomToMaxExtent() {
+        zoomToExtent(maxExtent, false)
+    }
+    
+    public function zoomToExtent(bounds: Bounds, closest: Boolean) {
+    	setCenter(center, getZoomForExtent(bounds, closest), false, false)
+    }
+    
+    function getZoomForExtent(bounds: Bounds, closest: Boolean) {
+        return baseLayer.getZoomForExtent(bounds, closest)
+    }
+    
+    public function getZoomForResolution(resolution: Number, closest: Boolean) {
+        return baseLayer.getZoomForResolution(resolution, closest)
+    }
 	
 	public function calculateBounds(): Bounds {
         var w_deg = width * resolution;
         var h_deg = height * resolution;
 
-        return Bounds {left: this.center.lon - w_deg / 2,
-                       bottom: this.center.lat - h_deg / 2,
-                       right: this.center.lon + w_deg / 2,
-    	               top: this.center.lat + h_deg / 2};
+        return Bounds {
+        	left: this.center.lon - w_deg / 2
+            bottom: this.center.lat - h_deg / 2
+            right: this.center.lon + w_deg / 2
+    	    top: this.center.lat + h_deg / 2
+    	}
     }
 	
 	public function mapResize() {
-	    baseLayer.width = width;
-	    baseLayer.height = height;
+	    baseLayer.onMapResize()
 	}
 	
 	public function getLonLatFromViewPortPx(viewPortPx: Pixel): LonLat {
-        return baseLayer.getLonLatFromViewPortPx(viewPortPx);
+        return baseLayer.getLonLatFromViewPortPx(viewPortPx)
     }
 	
 	public function getViewPortPxFromLayerPx(layerPx: Pixel) : Pixel {
-        return Pixel {x: layerPx.x+layersContainer.layoutX, y: layerPx.y+layersContainer.layoutY};
+        return Pixel {
+        	x: layerPx.x+layersContainer.layoutX
+        	y: layerPx.y+layersContainer.layoutY
+        }
     }
 	
 	public function getLonLatFromLayerPx(px: Pixel): LonLat {
@@ -97,19 +133,22 @@ public class Map extends Container  {
     }
     
     public function getLayerPxFromViewPortPx(viewPortPx: Pixel) {
-        return Pixel {x: layersContainer.layoutX-viewPortPx.x, y: layersContainer.layoutY- viewPortPx.y};
+        return Pixel {
+        	x: layersContainer.layoutX-viewPortPx.x
+        	y: layersContainer.layoutY- viewPortPx.y
+        }
     }
     
     public function getViewPortPxFromLonLat(lonlat: LonLat) {
-        return baseLayer.getViewPortPxFromLonLat(lonlat);
+        return baseLayer.getViewPortPxFromLonLat(lonlat)
     }
     
     public function getPixelFromLonLat(lonlat: LonLat) {
-        return getViewPortPxFromLonLat(lonlat);
+        return getViewPortPxFromLonLat(lonlat)
     }
     
     public function getLayerPxFromLonLat(lonlat: LonLat) {
-       return getLayerPxFromViewPortPx(getPixelFromLonLat(lonlat));         
+       return getLayerPxFromViewPortPx(getPixelFromLonLat(lonlat))  
     }
 	
 	override function doLayout() {

@@ -11,12 +11,13 @@ import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 
 public class Image extends Layer {
+    public var url: String;
 	public var extent: Bounds;
 	
 	var firstRender: Boolean = true;
 
-	var image = javafx.scene.image.Image {
-		url: "http://www.google.com/logos/Logo_25wht.gif"
+	def image = javafx.scene.image.Image {
+		url: url
 	}
 	
 	def imageView = ImageView {
@@ -31,9 +32,10 @@ public class Image extends Layer {
 	    setTileSize();
     	
     	// TODO: fix this calc..
-    	var ulPx = map.getLayerPxFromLonLat(LonLat {lon: extent.left, lat: extent.top });
-    	ulPx.x = 0;
-    	ulPx.y = 0;
+    	var ul = LonLat {lon: extent.left, lat: extent.top };
+    	var ulPx = map.getLayerPxFromLonLat(ul);
+    	//ulPx.x = 0;
+    	//ulPx.y = 0;
     	
     	imageView.x = ulPx.x;
     	imageView.y = ulPx.y;
@@ -45,17 +47,21 @@ public class Image extends Layer {
     	
     	if (firstRender) {
             insert imageView into content;
-        	firstRender = false;
+        	firstRender = false
         }
         
-        return null;
+        return null
 	}
 	
 	public function setTileSize(): Size {
 	    // TODO: fix this calc...
         var tileWidth = extent.getWidth() / map.getResolution();
         var tileHeight = extent.getHeight() / map.getResolution();
-        tileSize = Size {w: tileWidth, h:tileHeight};
+        
+        Size {
+        	w: tileWidth
+        	h: tileHeight
+        }
     }	
 }
 

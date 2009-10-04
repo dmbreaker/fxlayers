@@ -6,20 +6,28 @@ import org.fxlayers.*;
 
 var scene: Scene;
 
-var map: Map;
+var map: Map = Map{};
 
 javafx.stage.Stage {
     title : "Test"
     visible: true
     scene: scene = javafx.scene.Scene {
-        width: 400
-        height: 400
-        content: [ map = Map{} ]
+        width: 800
+        height: 600
+        content: [ map ]
     }
 }
 
-def imageLayer = org.fxlayers.layer.Image{ extent: Bounds { left: -180, bottom: -90, right:180, top:90 } };
+def imageLayer = org.fxlayers.layer.Image { 
+	url: "http://earthtrends.wri.org/images/maps/4_m_citylights_lg.gif"
+	extent: Bounds { 
+		left: -180, 
+		bottom: -88.759, 
+		right: 180, 
+		top: 88.759
+	}
+}
 
 map.addLayer(imageLayer);
 
-map.setCenter(LonLat{lon: 0, lat: 0}, 0, false, false);
+map.zoomToMaxExtent();
