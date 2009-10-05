@@ -1,7 +1,6 @@
 package org.fxlayers;
 
 import javafx.scene.*;
-import javafx.scene.text.*;
 
 public class Control extends CustomNode {
 	public var map: Map;
@@ -15,12 +14,6 @@ public class Control extends CustomNode {
 	}
 
 	override public function create(): Node {
-		
-		Text {
-		    x: 10
-		    y: 50
-		    font: Font { size: 20 }
-		    content: "This is a test"
-		}
+		Group {}
 	}
 }

@@ -14,17 +14,18 @@ public abstract class Layer extends Container {
 	public var tileSize: Size;
 
 	public function moveTo(bounds: Bounds, dragging: Boolean, forceZoomChange: Boolean) {
-		var test = null
+		// TODO: hmm..
 	}
 	
 	public function setMap(map: Map) {
 	    this.map = map;
 	    
+	    // TODO: more stuff needs to be initialized from the map...?
 	    maxExtent = map.maxExtent
 	}
 	
 	public function getResolution() : Number {
-	    // TODO: handle zoom level
+	    // TODO: handle zoom levels
 		map.resolution
 	}
 	
@@ -58,7 +59,7 @@ public abstract class Layer extends Container {
         var delta_x: Number = viewPortPx.x - (map.width / 2);
         var delta_y: Number = viewPortPx.y - (map.height / 2);
         
-        var lonlat = LonLat {
+        LonLat {
         	lon: center.lon + delta_x * res
         	lat: center.lat - delta_y * res
         }
@@ -73,7 +74,7 @@ public abstract class Layer extends Container {
         var resolution: Number = map.getResolution();
         var extent: Bounds = map.getExtent();
                    
-        var pixel: Pixel = Pixel {
+        Pixel {
         	x: (1/resolution * (lonlat.lon - extent.left))
         	y: (1/resolution * (extent.top - lonlat.lat))
         }

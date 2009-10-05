@@ -26,10 +26,30 @@ public class Map extends Container  {
 	public var px: Number;
 	public var py: Number;
 	override var onMouseMoved = function(e:MouseEvent) { 
+	    // TODO: hmm..
 		px = e.x;
 		py = e.y;
 	}
 	
+	var dx: Number = 0;
+	var dy: Number = 0;
+	
+	override var onMouseDragged = function(e:MouseEvent) {
+		// TODO: move into pan control
+		var centerPx: Pixel = getViewPortPxFromLonLat(getCenter());
+		centerPx.add(-e.dragX+dx, -e.dragY+dy);
+		var newCenterLonLat = getLonLatFromViewPortPx(centerPx);
+		setCenter(newCenterLonLat, 0, false, false);
+		
+		dx = e.dragX;
+		dy = e.dragY;
+	}
+	
+	override var onMouseReleased = function(e:MouseEvent) {
+		dx = 0;
+		dy = 0;
+	}
+		
 	var firstRender: Boolean = true;
 	var size: Size = Size { 
 		w: bind width
@@ -49,7 +69,7 @@ public class Map extends Container  {
 	    
 	    insert layer into layersContainer.content;
 	    
-	    baseLayer = layer;
+	    baseLayer = layer
 	}
 	
 	public function addControl(control: Control) {
@@ -59,23 +79,23 @@ public class Map extends Container  {
 	}
 	
 	public function getSize() {
-	    return size
+	    size
 	}
 	
 	public function getMaxExtent() { 
-        return maxExtent;
+        maxExtent
     }
 	
 	public function getCenter() : LonLat {
-		return center
+		center
 	}
 	
 	public function getResolution() : Number {
-		return baseLayer.getResolution()
+		baseLayer.getResolution()
 	}
 	
 	public function getExtent() : Bounds {
-	    return baseLayer.getExtent()
+	    baseLayer.getExtent()
 	}
 	
 	public function moveTo(lonlat: LonLat, zoom : Integer, dragging: Boolean, forceZoomChange: Boolean) {
@@ -110,18 +130,18 @@ public class Map extends Container  {
     }
     
     function getZoomForExtent(bounds: Bounds, closest: Boolean) {
-        return baseLayer.getZoomForExtent(bounds, closest)
+        baseLayer.getZoomForExtent(bounds, closest)
     }
     
     public function getZoomForResolution(resolution: Number, closest: Boolean) {
-        return baseLayer.getZoomForResolution(resolution, closest)
+        baseLayer.getZoomForResolution(resolution, closest)
     }
 	
 	public function calculateBounds(): Bounds {
         var w_deg = width * resolution;
         var h_deg = height * resolution;
 
-        return Bounds {
+        Bounds {
         	left: this.center.lon - w_deg / 2
             bottom: this.center.lat - h_deg / 2
             right: this.center.lon + w_deg / 2
@@ -134,37 +154,37 @@ public class Map extends Container  {
 	}
 	
 	public function getLonLatFromViewPortPx(viewPortPx: Pixel): LonLat {
-        return baseLayer.getLonLatFromViewPortPx(viewPortPx)
+        baseLayer.getLonLatFromViewPortPx(viewPortPx)
     }
 	
 	public function getViewPortPxFromLayerPx(layerPx: Pixel) : Pixel {
-        return Pixel {
+        Pixel {
         	x: layerPx.x+layersContainer.layoutX
         	y: layerPx.y+layersContainer.layoutY
         }
     }
 	
 	public function getLonLatFromLayerPx(px: Pixel): LonLat {
-       return getLonLatFromViewPortPx(getViewPortPxFromLayerPx(px));         
+       getLonLatFromViewPortPx(getViewPortPxFromLayerPx(px));         
     }
     
     public function getLayerPxFromViewPortPx(viewPortPx: Pixel) {
-        return Pixel {
-        	x: layersContainer.layoutX-viewPortPx.x
-        	y: layersContainer.layoutY- viewPortPx.y
+        Pixel {
+        	x: viewPortPx.x-layersContainer.layoutX
+        	y: viewPortPx.y-layersContainer.layoutY
         }
     }
     
     public function getViewPortPxFromLonLat(lonlat: LonLat) {
-        return baseLayer.getViewPortPxFromLonLat(lonlat)
+        baseLayer.getViewPortPxFromLonLat(lonlat)
     }
     
     public function getPixelFromLonLat(lonlat: LonLat) {
-        return getViewPortPxFromLonLat(lonlat)
+        getViewPortPxFromLonLat(lonlat)
     }
     
     public function getLayerPxFromLonLat(lonlat: LonLat) {
-       return getLayerPxFromViewPortPx(getPixelFromLonLat(lonlat))  
+       getLayerPxFromViewPortPx(getPixelFromLonLat(lonlat))  
     }
 	
 	override function doLayout() {
