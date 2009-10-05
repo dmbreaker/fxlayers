@@ -30,13 +30,11 @@ public class Image extends Layer {
     
     override public function moveTo(bounds: Bounds, dragging: Boolean, forceZoomChange: Boolean) {
 	    setTileSize();
-    	
-    	// TODO: fix this calc..
+
     	var ul = LonLat {lon: extent.left, lat: extent.top };
     	var ulPx = map.getLayerPxFromLonLat(ul);
-    	//ulPx.x = 0;
-    	//ulPx.y = 0;
-    	
+
+		// TODO: break out into tile logic
     	imageView.x = ulPx.x;
     	imageView.y = ulPx.y;
     	
@@ -49,16 +47,15 @@ public class Image extends Layer {
             insert imageView into content;
         	firstRender = false
         }
-        
+
         return null
 	}
 	
-	public function setTileSize(): Size {
-	    // TODO: fix this calc...
+	public function setTileSize() {
         var tileWidth = extent.getWidth() / map.getResolution();
         var tileHeight = extent.getHeight() / map.getResolution();
         
-        Size {
+        tileSize = Size {
         	w: tileWidth
         	h: tileHeight
         }
