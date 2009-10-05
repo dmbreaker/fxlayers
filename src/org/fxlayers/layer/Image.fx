@@ -47,8 +47,6 @@ public class Image extends Layer {
             insert imageView into content;
         	firstRender = false
         }
-
-        return null
 	}
 	
 	public function setTileSize() {
